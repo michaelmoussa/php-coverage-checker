@@ -10,5 +10,8 @@
             "email": "ocramius@gmail.com",
             "homepage": "http://ocramius.github.com"
         }
+    ],
+    "bin": [
+        "bin/php-coverage-checker"
     ]
 }
