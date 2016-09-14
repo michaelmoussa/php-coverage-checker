@@ -8,7 +8,7 @@ Initial commit is 100% the work of [Ocramius](https://github.com/ocramius): http
 
 Composer!
 
-`composer require michaelmoussa/php-coverage-checker`
+`composer require --dev michaelmoussa/php-coverage-checker`
 
 ## Usage
 
