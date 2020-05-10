@@ -13,15 +13,24 @@ if (!$percentage) {
 
 $xml             = new SimpleXMLElement(file_get_contents($inputFile));
 $metrics         = $xml->xpath('//metrics');
-$totalElements   = 0;
-$checkedElements = 0;
+$packages        = $xml->xpath('//package');
 
-foreach ($metrics as $metric) {
-    $totalElements   += (int) $metric['elements'];
-    $checkedElements += (int) $metric['coveredelements'];
+foreach ($packages as $package) {
+    foreach ($package->file as $file) {
+        $fileElements = (int) $file->metrics['elements'];
+        $fileCoveredElements = (int) $file->metrics['coveredelements'];
+        echo $file['name'] . ' ' . coverage_percent($fileElements, $fileCoveredElements) . '%' . PHP_EOL;
+    }
 }
 
-$coverage = ($totalElements === 0) ? 0 : ($checkedElements / $totalElements) * 100;
+$totalElements   = 0;
+$coveredElements = 0;
+foreach ($metrics as $metric) {
+    $totalElements   += (int) $metric['elements'];
+    $coveredElements += (int) $metric['coveredelements'];
+}
+
+$coverage = coverage_percent($totalElements, $coveredElements);
 
 if ($coverage < $percentage) {
     echo 'Code coverage is ' . $coverage . '%, which is below the accepted ' . $percentage . '%' . PHP_EOL;
@@ -29,3 +38,8 @@ if ($coverage < $percentage) {
 }
 
 echo 'Code coverage is ' . $coverage . '% - OK!' . PHP_EOL;
+
+function coverage_percent($elements, $coveredElements){
+    $coverage_percent =  ($elements === 0) ? 0 :  ($coveredElements/$elements) * 100;
+    return round($coverage_percent, 2);
+}
